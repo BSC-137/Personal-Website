@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Contact Me">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-16 space-y-4">
+      <h1 class="text-6xl md:text-7xl font-bold glow-text animate-float">
+        Get in Touch
+      </h1>
+      <p class="text-xl text-gray-600 retro-text">
+        Let's connect and create something cool together!
+      </p>
+    </div>
+
+    <!-- Contact options -->
+    <div class="grid md:grid-cols-2 gap-8 mb-12">
+      <!-- Email -->
+      <a href="mailto:your.email@example.com" class="glass-panel rounded-3xl p-8 card-3d border border-white/40 transition-all duration-500 group block">
+        <h2 class="text-2xl font-bold mb-2 text-gray-800">Email</h2>
+        <p class="text-gray-600 mb-4">Slide into my inbox</p>
+        <span class="text-blue-600 group-hover:translate-x-2 transition-transform inline-block font-medium">
+          your.email@example.com →
+        </span>
+      </a>
+
+      <!-- Twitter/X -->
+      <a href="https://twitter.com/yourusername" target="_blank" rel="noopener noreferrer" class="glass-panel rounded-3xl p-8 card-3d border border-white/40 transition-all duration-500 group block">
+        <h2 class="text-2xl font-bold mb-2 text-gray-800">Twitter/X</h2>
+        <p class="text-gray-600 mb-4">Let's tweet together</p>
+        <span class="text-blue-600 group-hover:translate-x-2 transition-transform inline-block font-medium">
+          @yourusername →
+        </span>
+      </a>
+
+      <!-- GitHub -->
+      <a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer" class="glass-panel rounded-3xl p-8 card-3d border border-white/40 transition-all duration-500 group block">
+        <h2 class="text-2xl font-bold mb-2 text-gray-800">GitHub</h2>
+        <p class="text-gray-600 mb-4">Check out my code</p>
+        <span class="text-blue-600 group-hover:translate-x-2 transition-transform inline-block font-medium">
+          github.com/yourusername →
+        </span>
+      </a>
+
+      <!-- LinkedIn -->
+      <a href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener noreferrer" class="glass-panel rounded-3xl p-8 card-3d border border-white/40 transition-all duration-500 group block">
+        <h2 class="text-2xl font-bold mb-2 text-gray-800">LinkedIn</h2>
+        <p class="text-gray-600 mb-4">Let's network professionally</p>
+        <span class="text-blue-600 group-hover:translate-x-2 transition-transform inline-block font-medium">
+          linkedin.com/in/yourusername →
+        </span>
+      </a>
+    </div>
+
+    <!-- Message section -->
+    <div class="glass-panel border border-white/40 rounded-3xl p-12 shadow-glass">
+      <h2 class="text-3xl font-bold mb-6 text-gray-800">Send a Message</h2>
+      <p class="text-gray-600 mb-6">
+        Want to collaborate, have a question, or just want to say hi? 
+        I'd love to hear from you! Send me an email or reach out on any of the platforms above.
+      </p>
+      <p class="text-gray-700">
+        <strong>Response time:</strong> Usually within 24-48 hours ⚡
+      </p>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  // Add 3D tilt effect
+  document.querySelectorAll('.card-3d').forEach((card) => {
+    const cardElement = card as HTMLElement;
+    
+    cardElement.addEventListener('mousemove', (e) => {
+      const rect = cardElement.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      
+      const rotateX = (y - centerY) / 20;
+      const rotateY = (centerX - x) / 20;
+      
+      cardElement.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+    });
+    
+    cardElement.addEventListener('mouseleave', () => {
+      cardElement.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+    });
+  });
+</script>
+

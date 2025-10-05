@@ -1,0 +1,22 @@
+{
+  "name": "personal-website",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "A modern personal website with glassmorphism and retro internet vibes",
+  "dependencies": {
+    "@astrojs/mdx": "^4.0.6",
+    "@astrojs/tailwind": "^6.0.2",
+    "@types/three": "^0.180.0",
+    "astro": "^5.1.5",
+    "tailwindcss": "^3.4.1",
+    "three": "^0.180.0"
+  }
+}

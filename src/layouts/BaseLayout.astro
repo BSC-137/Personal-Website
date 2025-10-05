@@ -1,0 +1,983 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "My Personal Website" } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body class="min-h-screen overflow-x-hidden relative liquid-bg">
+    <!-- Aurora Background Effect - Frutiger Aero Style -->
+    <div class="aurora-bg"></div>
+    
+    <!-- Extensive Frutiger Aero Bubbles -->
+    <div class="bubble-container"></div>
+    
+    <canvas id="webglCanvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -100;"></canvas>
+    
+    <!-- Pixelated Cursor Trail Canvas - BELOW CONTENT -->
+    <canvas id="pixelTrail" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10;"></canvas>
+    
+    <!-- Content Wrapper with higher z-index -->
+    <div style="position: relative; z-index: 100;">
+    
+    <!-- Glass Navigation -->
+    <nav class="sticky top-4 mx-4 mt-4" style="z-index: 200;">
+      <div class="max-w-6xl mx-auto glass-panel rounded-2xl px-8 py-4 border border-white/40 shadow-glass">
+        <div class="flex justify-between items-center">
+          <a href="/" class="text-2xl font-bold text-gray-800 hover:text-blue-600 transition-all duration-500 tracking-tight">
+            Bharat Sharma
+          </a>
+          <ul class="flex gap-3 items-center">
+            <li><a href="/" class="nav-tab-glass" data-active="home">Home</a></li>
+            <li><a href="/blog" class="nav-tab-glass" data-active="blog">Blog</a></li>
+            <li><a href="/about" class="nav-tab-glass" data-active="about">About</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main content -->
+    <main class="max-w-7xl mx-auto px-4 py-12">
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-20 pb-8">
+      <div class="max-w-6xl mx-auto px-4">
+        <div class="glass-panel rounded-2xl px-8 py-6 text-center border border-white/50 shadow-glass">
+          <p class="text-gray-600 text-sm font-medium">© 2025 Bharat Sharma | Built with Astro ✨</p>
+        </div>
+      </div>
+    </footer>
+    
+    </div><!-- End content wrapper -->
+
+    <style is:global>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Segoe+UI:wght@400;600;700&display=swap');
+      
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        color: #1a1a1a;
+        position: relative;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-size: 16px;
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+      
+      /* Smooth scrolling container */
+      html {
+        overscroll-behavior: none;
+      }
+      
+      html.lenis {
+        height: auto;
+      }
+
+      .lenis.lenis-smooth {
+        scroll-behavior: auto !important;
+      }
+
+      .lenis.lenis-smooth [data-lenis-prevent] {
+        overscroll-behavior: contain;
+      }
+
+      .lenis.lenis-stopped {
+        overflow: hidden;
+      }
+
+      .lenis.lenis-scrolling iframe {
+        pointer-events: none;
+      }
+      
+      /* 3D Glassy Text Effect for Headers */
+      h1, h2, h3 {
+        text-shadow: 
+          0 2px 4px rgba(255, 255, 255, 0.9),
+          0 4px 8px rgba(200, 240, 255, 0.5),
+          0 1px 0px rgba(255, 255, 255, 1),
+          0 -1px 2px rgba(150, 220, 255, 0.4);
+      }
+
+      /* Consistent Blueish-White Background */
+      .liquid-bg {
+        background: linear-gradient(135deg, 
+          #e8f7ff 0%, 
+          #d0ecff 25%,
+          #e0f5ff 50%,
+          #d8f0ff 75%,
+          #e8f7ff 100%);
+        background-attachment: fixed;
+      }
+
+      /* Optimized Aurora Effect */
+      .aurora-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -99;
+        opacity: 0.5;
+        background: 
+          radial-gradient(ellipse at 20% 30%, rgba(120, 230, 255, 0.5) 0%, transparent 50%),
+          radial-gradient(ellipse at 80% 70%, rgba(160, 245, 255, 0.45) 0%, transparent 50%),
+          radial-gradient(ellipse at 50% 50%, rgba(200, 250, 255, 0.4) 0%, transparent 55%);
+        animation: aurora-flow 20s ease-in-out infinite;
+        will-change: transform, opacity;
+      }
+
+      @keyframes aurora-flow {
+        0%, 100% {
+          transform: translate3d(0, 0, 0) scale(1);
+          opacity: 0.5;
+        }
+        33% {
+          transform: translate3d(8%, -8%, 0) scale(1.15);
+          opacity: 0.65;
+        }
+        66% {
+          transform: translate3d(-6%, 6%, 0) scale(0.9);
+          opacity: 0.55;
+        }
+      }
+
+      /* Extensive Frutiger Aero Bubbles */
+      .bubble-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -98;
+        pointer-events: none;
+        overflow: hidden;
+      }
+
+      /* Enhanced Liquid Bubbles - Optimized */
+      .aero-bubble {
+        position: absolute;
+        border-radius: 50%;
+        background: radial-gradient(circle at 30% 30%, 
+          rgba(180, 240, 255, 0.55), 
+          rgba(130, 220, 255, 0.35) 35%,
+          rgba(100, 200, 255, 0.2) 65%,
+          transparent 100%);
+        box-shadow: 
+          0 8px 40px rgba(120, 230, 255, 0.4),
+          inset -12px -12px 35px rgba(255, 255, 255, 0.5),
+          inset 12px 12px 35px rgba(80, 180, 255, 0.2);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        animation: float-bubble 20s ease-in-out infinite;
+        filter: blur(0.3px);
+        will-change: transform, opacity;
+        contain: layout style paint;
+      }
+
+      @keyframes float-bubble {
+        0%, 100% {
+          transform: translate(0, 0) scale(1) rotate(0deg);
+          opacity: 0.7;
+        }
+        20% {
+          transform: translate(40px, -60px) scale(1.15) rotate(5deg);
+          opacity: 0.85;
+        }
+        40% {
+          transform: translate(-30px, -120px) scale(0.9) rotate(-5deg);
+          opacity: 0.75;
+        }
+        60% {
+          transform: translate(50px, -180px) scale(1.1) rotate(8deg);
+          opacity: 0.8;
+        }
+        80% {
+          transform: translate(-20px, -240px) scale(0.95) rotate(-3deg);
+          opacity: 0.7;
+        }
+      }
+
+      /* Optimized Glassy Panel */
+      .glass-panel {
+        backdrop-filter: blur(30px) saturate(160%);
+        -webkit-backdrop-filter: blur(30px) saturate(160%);
+        background: linear-gradient(135deg, 
+          rgba(255, 255, 255, 0.75) 0%, 
+          rgba(240, 250, 255, 0.65) 50%,
+          rgba(255, 255, 255, 0.70) 100%
+        );
+        position: relative;
+        transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                    box-shadow 0.35s ease;
+        border: 2px solid rgba(255, 255, 255, 0.9);
+        border-radius: 1.5rem;
+        box-shadow: 
+          0 8px 24px rgba(0, 150, 255, 0.2),
+          0 0 0 1px rgba(255, 255, 255, 0.7) inset;
+        overflow: hidden;
+        will-change: transform;
+        contain: layout style paint;
+      }
+
+      /* Glossy highlight - Strong Frutiger Aero */
+      .glass-panel::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle at 30% 30%, 
+          rgba(255, 255, 255, 0.6) 0%, 
+          rgba(255, 255, 255, 0.3) 20%,
+          transparent 50%);
+        border-radius: inherit;
+        pointer-events: none;
+        animation: glossy-shine 8s ease-in-out infinite;
+      }
+
+      @keyframes glossy-shine {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        50% { transform: translate(5%, 5%) scale(1.05); }
+      }
+
+      /* Liquid ripple effect on hover */
+      .glass-panel::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+          rgba(100, 200, 255, 0.3) 0%, 
+          transparent 50%);
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        border-radius: inherit;
+      }
+
+      .glass-panel:hover {
+        background: linear-gradient(135deg, 
+          rgba(255, 255, 255, 0.85) 0%, 
+          rgba(245, 252, 255, 0.75) 50%,
+          rgba(255, 255, 255, 0.80) 100%
+        );
+        box-shadow: 
+          0 12px 32px rgba(0, 160, 255, 0.25),
+          0 0 0 2px rgba(255, 255, 255, 0.9) inset;
+        transform: translate3d(0, -4px, 0) scale(1.01);
+      }
+
+      .glass-panel:hover::after {
+        opacity: 1;
+      }
+
+      /* Shadow Glass Effect - Enhanced */
+      .shadow-glass {
+        box-shadow: 
+          0 8px 32px rgba(0, 0, 0, 0.08),
+          0 0 0 1px rgba(255, 255, 255, 0.6) inset,
+          0 0 20px rgba(59, 130, 246, 0.08);
+      }
+
+      /* Legacy support */
+      .glass-cyber {
+        @apply glass-panel;
+      }
+
+      .glass-simple {
+        @apply glass-panel;
+      }
+
+      .glass-rainbow {
+        @apply glass-panel;
+      }
+
+      /* Navigation Tabs - Beautiful Glassy Button Transformation */
+      .nav-tab-glass {
+        @apply relative inline-block font-bold px-8 py-3.5;
+        border-radius: 1.5rem;
+        background: transparent;
+        color: #64748b;
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        position: relative;
+        overflow: visible;
+        border: 2px solid transparent;
+        font-size: 1rem;
+        isolation: isolate;
+      }
+
+      /* Gorgeous blue gradient line (bottom indicator) */
+      .nav-tab-glass span {
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%) scaleX(0);
+        width: 80%;
+        height: 4px;
+        background: linear-gradient(90deg, 
+          transparent 0%,
+          rgba(59, 130, 246, 0.8) 10%,
+          rgba(96, 165, 250, 1) 30%,
+          rgba(125, 211, 252, 1) 50%,
+          rgba(96, 165, 250, 1) 70%,
+          rgba(59, 130, 246, 0.8) 90%,
+          transparent 100%);
+        border-radius: 4px;
+        box-shadow: 
+          0 0 10px rgba(59, 130, 246, 0.6),
+          0 0 20px rgba(125, 211, 252, 0.4);
+        transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        z-index: 10;
+      }
+
+      /* Multi-layer glossy highlight */
+      .nav-tab-glass::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 50%;
+        background: linear-gradient(180deg, 
+          rgba(255, 255, 255, 0.85) 0%, 
+          rgba(255, 255, 255, 0.5) 50%,
+          transparent 100%);
+        border-radius: inherit;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        z-index: 1;
+      }
+
+      /* Animated shine sweep */
+      .nav-tab-glass::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -150%;
+        width: 80%;
+        height: 200%;
+        background: linear-gradient(90deg, 
+          transparent 0%, 
+          rgba(255, 255, 255, 1) 50%, 
+          transparent 100%);
+        transition: left 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+        pointer-events: none;
+        transform: skewX(-25deg);
+        z-index: 2;
+        opacity: 0;
+      }
+
+      /* STUNNING Glassy Button Transformation on Hover */
+      .nav-tab-glass:hover {
+        /* Vivid glassy gradient background */
+        background: linear-gradient(135deg, 
+          rgba(147, 197, 253, 1) 0%, 
+          rgba(125, 211, 252, 0.95) 20%,
+          rgba(147, 197, 253, 0.98) 40%,
+          rgba(96, 165, 250, 0.95) 60%,
+          rgba(125, 211, 252, 0.98) 80%,
+          rgba(147, 197, 253, 1) 100%);
+        color: #0a3a5c;
+        
+        /* Strong glass effect */
+        backdrop-filter: blur(35px) saturate(220%);
+        -webkit-backdrop-filter: blur(35px) saturate(220%);
+        
+        /* Prominent white border */
+        border-color: rgba(255, 255, 255, 1);
+        border-width: 3px;
+        
+        /* Dramatic multi-layer shading */
+        box-shadow: 
+          /* Huge outer glow */
+          0 15px 50px rgba(59, 130, 246, 0.7),
+          /* Mid-range shadows */
+          0 8px 25px rgba(96, 165, 250, 0.6),
+          0 4px 12px rgba(125, 211, 252, 0.5),
+          /* Bright inner white glow */
+          0 0 0 4px rgba(255, 255, 255, 0.95) inset,
+          /* Top glossy highlight */
+          inset 0 3px 10px rgba(255, 255, 255, 0.7),
+          /* Bottom depth shadow */
+          inset 0 -3px 10px rgba(59, 130, 246, 0.4),
+          /* Massive ambient glow */
+          0 0 60px rgba(125, 211, 252, 0.5);
+        
+        /* Big lift and scale */
+        transform: translate3d(0, -6px, 0) scale(1.12);
+        
+        /* Crisp text shadow */
+        text-shadow: 
+          0 1px 3px rgba(255, 255, 255, 0.9),
+          0 2px 6px rgba(59, 130, 246, 0.4);
+      }
+      
+      .nav-tab-glass:hover::before {
+        opacity: 1;
+      }
+
+      .nav-tab-glass:hover::after {
+        left: 250%;
+        opacity: 1;
+      }
+
+      /* Show blue gradient line on hover */
+      .nav-tab-glass:hover span {
+        transform: translateX(-50%) scaleX(1);
+      }
+
+      /* Active/Selected state with gradient line */
+      .nav-tab-glass.active {
+        background: linear-gradient(135deg, 
+          rgba(147, 197, 253, 0.85) 0%, 
+          rgba(125, 211, 252, 0.8) 50%,
+          rgba(147, 197, 253, 0.85) 100%);
+        color: #0c4a6e;
+        backdrop-filter: blur(25px) saturate(180%);
+        -webkit-backdrop-filter: blur(25px) saturate(180%);
+        border-color: rgba(255, 255, 255, 0.9);
+        border-width: 2.5px;
+        box-shadow: 
+          0 8px 30px rgba(59, 130, 246, 0.5),
+          0 4px 15px rgba(96, 165, 250, 0.4),
+          0 0 0 3px rgba(255, 255, 255, 0.85) inset,
+          inset 0 2px 6px rgba(255, 255, 255, 0.5);
+      }
+
+      .nav-tab-glass.active::before {
+        opacity: 0.8;
+      }
+
+      /* Always show gradient line for active tab */
+      .nav-tab-glass.active span {
+        transform: translateX(-50%) scaleX(1);
+        animation: pulse-line 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse-line {
+        0%, 100% {
+          opacity: 1;
+          box-shadow: 
+            0 0 10px rgba(59, 130, 246, 0.6),
+            0 0 20px rgba(125, 211, 252, 0.4);
+        }
+        50% {
+          opacity: 0.8;
+          box-shadow: 
+            0 0 15px rgba(59, 130, 246, 0.8),
+            0 0 30px rgba(125, 211, 252, 0.6);
+        }
+      }
+
+      /* Click/Active press state */
+      .nav-tab-glass:active {
+        background: linear-gradient(135deg, 
+          rgba(125, 211, 252, 0.95) 0%, 
+          rgba(96, 165, 250, 0.9) 50%,
+          rgba(147, 197, 253, 0.95) 100%);
+        
+        transform: translate3d(0, -2px, 0) scale(1.06);
+        
+        box-shadow: 
+          0 8px 25px rgba(59, 130, 246, 0.6),
+          0 4px 12px rgba(96, 165, 250, 0.5),
+          0 0 0 3px rgba(255, 255, 255, 0.95) inset,
+          inset 0 4px 12px rgba(59, 130, 246, 0.5);
+        
+        transition: all 0.15s ease;
+      }
+
+      /* Legacy navigation link support */
+      .nav-link-glass {
+        @apply nav-tab-glass;
+      }
+
+      /* Optimized Glassy Button */
+      .glass-button {
+        @apply inline-block px-8 py-3.5 font-medium;
+        border-radius: 1.25rem;
+        background: linear-gradient(135deg, #0078d4 0%, #0088ee 100%);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
+                    box-shadow 0.25s ease;
+        box-shadow: 
+          0 4px 16px rgba(0, 120, 212, 0.3),
+          0 2px 8px rgba(0, 136, 238, 0.2);
+        text-shadow: 
+          0 2px 4px rgba(255, 255, 255, 0.3),
+          0 1px 2px rgba(200, 240, 255, 0.2),
+          0 1px 2px rgba(0, 0, 0, 0.2);
+        position: relative;
+        overflow: hidden;
+        will-change: transform;
+        contain: layout style paint;
+      }
+
+      .glass-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 50%;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, transparent 100%);
+        border-radius: inherit;
+        pointer-events: none;
+      }
+
+      .glass-button:hover {
+        transform: translate3d(0, -2px, 0);
+        box-shadow: 
+          0 6px 20px rgba(0, 120, 212, 0.35),
+          0 4px 12px rgba(0, 136, 238, 0.25);
+        background: linear-gradient(135deg, #0088ee 0%, #0098ff 100%);
+      }
+
+      .glass-button:active {
+        transform: translate3d(0, 0, 0);
+        transition: all 0.1s ease;
+      }
+
+      /* Legacy support */
+      .cyber-button {
+        @apply glass-button;
+      }
+
+      .retro-button {
+        @apply glass-button;
+      }
+
+      .retro-button-rainbow {
+        @apply glass-button;
+      }
+
+      .nav-link-cyber {
+        @apply nav-link-glass;
+      }
+
+      .nav-link-rainbow {
+        @apply nav-link-glass;
+      }
+
+      .hover-cyber {
+        transition: all 0.3s ease;
+      }
+
+      .hover-rainbow {
+        transition: all 0.3s ease;
+      }
+
+      /* Light Scrollbar */
+      ::-webkit-scrollbar {
+        width: 12px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.5);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, rgba(59, 130, 246, 0.6), rgba(147, 51, 234, 0.6));
+        border-radius: 10px;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, #3b82f6, #8b5cf6);
+      }
+
+      /* Clean Text Style */
+      .retro-text {
+        font-family: 'Inter', sans-serif;
+        letter-spacing: 0.3px;
+        color: #4b5563;
+      }
+
+      /* Optimized Card Animation */
+      .card-3d {
+        transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                    box-shadow 0.35s ease;
+        will-change: transform;
+        contain: layout style paint;
+      }
+
+      .card-3d:hover {
+        transform: translate3d(0, -12px, 0) scale(1.02);
+        box-shadow: 
+          0 20px 40px rgba(0, 0, 0, 0.1),
+          0 10px 20px rgba(0, 150, 255, 0.12),
+          0 0 0 2px rgba(255, 255, 255, 0.8) inset;
+      }
+
+
+      /* Typography Improvements */
+      h1, h2, h3, h4, h5, h6 {
+        font-weight: 700;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+      }
+
+      p {
+        line-height: 1.7;
+        margin-bottom: 1rem;
+      }
+
+      /* Professional spacing */
+      .content-spacing {
+        margin-bottom: 2rem;
+      }
+
+      .section-spacing {
+        margin-bottom: 4rem;
+      }
+
+      /* Elegant Glow Text */
+      .glow-text {
+        color: #1f2937;
+      }
+
+      /* Remove heavy animations for performance */
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+    </style>
+
+    <!-- SVG filter for liquid effect -->
+    <svg style="position: absolute; width: 0; height: 0;">
+      <defs>
+        <filter id="goo">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+          <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo" />
+          <feBlend in="SourceGraphic" in2="goo" />
+        </filter>
+      </defs>
+    </svg>
+
+    <!-- Three.js 80s Retro Grid Background -->
+    <script type="module">
+      import * as THREE from 'three';
+
+      const canvas = document.getElementById('webglCanvas');
+      const scene = new THREE.Scene();
+      scene.fog = new THREE.Fog(0xf8fafc, 10, 50);
+      
+      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      
+      // 80s Retro Grid Floor
+      const gridSize = 50;
+      const gridDivisions = 50;
+      const gridHelper = new THREE.GridHelper(gridSize, gridDivisions, 0x3b82f6, 0x8b5cf6);
+      gridHelper.material.transparent = true;
+      gridHelper.material.opacity = 0.3;
+      gridHelper.position.y = -2;
+      scene.add(gridHelper);
+
+      // Add floating geometric shapes (80s style)
+      const shapes = [];
+      const geometryTypes = [
+        new THREE.BoxGeometry(0.5, 0.5, 0.5),
+        new THREE.TetrahedronGeometry(0.4),
+        new THREE.OctahedronGeometry(0.4),
+        new THREE.TorusGeometry(0.3, 0.1, 8, 12)
+      ];
+
+      for(let i = 0; i < 6; i++) {
+        const geometry = geometryTypes[i % geometryTypes.length];
+        const material = new THREE.MeshBasicMaterial({
+          color: [0x3b82f6, 0x8b5cf6, 0xec4899][i % 3],
+          wireframe: true,
+          transparent: true,
+          opacity: 0.4
+        });
+        const shape = new THREE.Mesh(geometry, material);
+        shape.position.set(
+          (Math.random() - 0.5) * 15,
+          Math.random() * 5 + 2,
+          (Math.random() - 0.5) * 15
+        );
+        scene.add(shape);
+        shapes.push(shape);
+      }
+
+      // Camera position
+      camera.position.set(0, 3, 8);
+      camera.lookAt(0, 0, 0);
+
+      // Mouse interaction
+      let mouseX = 0;
+      let mouseY = 0;
+      
+      document.addEventListener('mousemove', (e) => {
+        mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+        mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+      });
+
+      // Animation
+      function animate() {
+        requestAnimationFrame(animate);
+        
+        // Animate grid (move forward for flying effect)
+        gridHelper.position.z += 0.05;
+        if (gridHelper.position.z > 1) {
+          gridHelper.position.z = 0;
+        }
+        
+        // Rotate shapes slowly
+        shapes.forEach((shape, i) => {
+          shape.rotation.x += 0.005;
+          shape.rotation.y += 0.005;
+          shape.position.y += Math.sin(Date.now() * 0.001 + i) * 0.002;
+        });
+        
+        // Smooth camera follow mouse
+        camera.position.x += (mouseX * 1.5 - camera.position.x) * 0.05;
+        camera.position.y += (3 + mouseY * 1.5 - camera.position.y) * 0.05;
+        camera.lookAt(0, 0, 0);
+        
+        renderer.render(scene, camera);
+      }
+      
+      animate();
+
+      // Handle resize
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+    </script>
+
+    <!-- Generate Optimized Frutiger Aero Bubbles -->
+    <script>
+      const bubbleContainer = document.querySelector('.bubble-container');
+      if (bubbleContainer) {
+        // Optimized bubble generation - 12 bubbles for smooth performance
+        const bubbleCount = 12;
+        const bubbleSizes = [70, 85, 100, 115, 130];
+        const fragment = document.createDocumentFragment();
+        
+        for (let i = 0; i < bubbleCount; i++) {
+          const bubble = document.createElement('div');
+          bubble.className = 'aero-bubble';
+          
+          const size = bubbleSizes[Math.floor(Math.random() * bubbleSizes.length)];
+          const left = Math.random() * 100;
+          const animationDelay = Math.random() * 15;
+          const animationDuration = 20 + Math.random() * 10;
+          
+          bubble.style.width = `${size}px`;
+          bubble.style.height = `${size}px`;
+          bubble.style.left = `${left}%`;
+          bubble.style.top = `${Math.random() * 100}%`;
+          bubble.style.animationDelay = `${animationDelay}s`;
+          bubble.style.animationDuration = `${animationDuration}s`;
+          
+          fragment.appendChild(bubble);
+        }
+        
+        bubbleContainer.appendChild(fragment);
+      }
+
+      // Add mouse tracking for liquid ripple effects
+      document.querySelectorAll('.glass-panel').forEach(panel => {
+        const panelElement = panel as HTMLElement;
+        panelElement.addEventListener('mousemove', (e: MouseEvent) => {
+          const rect = panelElement.getBoundingClientRect();
+          const x = ((e.clientX - rect.left) / rect.width) * 100;
+          const y = ((e.clientY - rect.top) / rect.height) * 100;
+          panelElement.style.setProperty('--mouse-x', `${x}%`);
+          panelElement.style.setProperty('--mouse-y', `${y}%`);
+        });
+      });
+    </script>
+
+    <!-- Ultra-Smooth Lenis Scroll -->
+    <script>
+      // @ts-ignore
+      import Lenis from 'lenis';
+
+      const lenis = new Lenis({
+        duration: 0.5,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 2.5,
+        smoothTouch: false,
+        touchMultiplier: 2,
+        infinite: false,
+      });
+
+      function raf(time: number) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+
+      requestAnimationFrame(raf);
+
+      // Add lenis class to html for CSS hooks
+      document.documentElement.classList.add('lenis');
+    </script>
+
+    <!-- Active Navigation Tab Detection -->
+    <script>
+      // Get current page path
+      const currentPath = window.location.pathname;
+      
+      // Select all nav tabs
+      const navTabs = document.querySelectorAll('.nav-tab-glass');
+      
+      navTabs.forEach(tab => {
+        const href = tab.getAttribute('href');
+        
+        // Add span for gradient line if it doesn't exist
+        if (!tab.querySelector('span')) {
+          const gradientLine = document.createElement('span');
+          tab.appendChild(gradientLine);
+        }
+        
+        // Check if current page matches
+        if (
+          (currentPath === '/' && href === '/') ||
+          (currentPath.startsWith('/blog') && href === '/blog') ||
+          (currentPath.startsWith('/about') && href === '/about')
+        ) {
+          tab.classList.add('active');
+        }
+      });
+    </script>
+
+    <!-- Optimized Glassy Cursor Trail -->
+    <script>
+      const trailCanvas = document.getElementById('pixelTrail') as HTMLCanvasElement;
+      if (trailCanvas) {
+        const ctx = trailCanvas.getContext('2d', { alpha: true, desynchronized: true });
+        if (!ctx) {
+          console.error('Could not get 2D context for cursor trail');
+        } else {
+          const trailCtx = ctx;
+          trailCanvas.width = window.innerWidth;
+          trailCanvas.height = window.innerHeight;
+
+          let resizeTimeout: number;
+          window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = window.setTimeout(() => {
+              trailCanvas.width = window.innerWidth;
+              trailCanvas.height = window.innerHeight;
+            }, 100);
+          });
+
+          interface Particle {
+            x: number;
+            y: number;
+            vx: number;
+            vy: number;
+            life: number;
+            size: number;
+            hue: number;
+          }
+
+          const particles: Particle[] = [];
+          let mouseX = 0;
+          let mouseY = 0;
+          let frameCount = 0;
+
+          document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+            // Only create particle every 3 frames for better performance
+            frameCount++;
+            if (frameCount % 3 === 0) {
+              particles.push({
+                x: mouseX,
+                y: mouseY,
+                vx: (Math.random() - 0.5) * 0.3,
+                vy: (Math.random() - 0.5) * 0.3,
+                life: 1,
+                size: Math.random() * 10 + 6,
+                hue: 190 + Math.random() * 30
+              });
+
+              // Limit particles
+              if (particles.length > 25) {
+                particles.shift();
+              }
+            }
+          }, { passive: true });
+
+          function animateTrail() {
+            trailCtx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
+
+            for (let i = particles.length - 1; i >= 0; i--) {
+              const p = particles[i];
+              
+              p.x += p.vx;
+              p.y += p.vy;
+              p.life -= 0.025;
+              p.size *= 0.96;
+
+              if (p.life > 0 && p.size > 1) {
+                const alpha = p.life * 0.5;
+                
+                // Simplified glass bubble - single gradient
+                const gradient = trailCtx.createRadialGradient(
+                  p.x - p.size * 0.3, p.y - p.size * 0.3, 0,
+                  p.x, p.y, p.size
+                );
+                gradient.addColorStop(0, `hsla(${p.hue}, 70%, 90%, ${alpha * 0.7})`);
+                gradient.addColorStop(0.6, `hsla(${p.hue}, 65%, 75%, ${alpha * 0.3})`);
+                gradient.addColorStop(1, `hsla(${p.hue}, 60%, 65%, 0)`);
+                
+                trailCtx.fillStyle = gradient;
+                trailCtx.beginPath();
+                trailCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                trailCtx.fill();
+
+              } else {
+                particles.splice(i, 1);
+              }
+            }
+
+            requestAnimationFrame(animateTrail);
+          }
+
+          animateTrail();
+        }
+      }
+    </script>
+  </body>
+</html>
+
+
+

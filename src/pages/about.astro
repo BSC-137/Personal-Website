@@ -1,0 +1,111 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="About Me">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-16 space-y-4">
+      <h1 class="text-6xl md:text-7xl font-bold glow-text animate-float">
+        👤 About Me
+      </h1>
+      <p class="text-xl text-gray-600 retro-text">
+        Getting to know the programmer behind the code
+      </p>
+    </div>
+
+    <!-- Main content -->
+    <div class="glass-panel border border-white/40 rounded-3xl p-12 mb-12 shadow-glass card-3d">
+      <div class="space-y-6 text-lg text-gray-700 leading-relaxed">
+        <p>
+          👋 Hey! I'm [Your Name], and welcome to my corner of the internet!
+        </p>
+        
+        <p>
+          This website is my digital playground where I share my thoughts, projects, 
+          and creative experiments. I believe in the magic of the early internet - 
+          when websites had personality, creativity flowed freely, and everything 
+          felt a bit more... human.
+        </p>
+
+        <p>
+          I'm passionate about:
+        </p>
+
+        <ul class="space-y-3 pl-6">
+          <li class="flex items-start gap-3">
+            <span class="text-2xl">💻</span>
+            <span>Building software solutions across diverse programming languages and tech stacks</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-2xl">✍️</span>
+            <span>Writing about technology, creativity, and life</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-2xl">🎨</span>
+            <span>Exploring digital art and design</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-2xl">🌐</span>
+            <span>Contributing to the indie web movement</span>
+          </li>
+        </ul>
+
+        <p>
+          This site is built with Astro, styled with love, and hosted on the web for 
+          you to explore. Feel free to browse around, read my blog, and reach out 
+          if you'd like to connect!
+        </p>
+      </div>
+    </div>
+
+    <!-- Fun facts section -->
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="glass-panel rounded-3xl p-8 card-3d border border-white/40">
+        <h2 class="text-2xl font-bold mb-4 flex items-center gap-3 text-gray-800">
+          <span class="text-3xl">🎯</span> Current Focus
+        </h2>
+        <p class="text-gray-600">
+          Building cool web experiences that bring back the fun and creativity of 
+          the early internet era.
+        </p>
+      </div>
+
+      <div class="glass-panel rounded-3xl p-8 card-3d border border-white/40">
+        <h2 class="text-2xl font-bold mb-4 flex items-center gap-3 text-gray-800">
+          <span class="text-3xl">💡</span> Philosophy
+        </h2>
+        <p class="text-gray-600">
+          Technology should be playful, accessible, and bring joy. Let's make the 
+          web weird and wonderful again!
+        </p>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  // Add 3D tilt effect
+  document.querySelectorAll('.card-3d').forEach((card) => {
+    const cardElement = card as HTMLElement;
+    
+    cardElement.addEventListener('mousemove', (e) => {
+      const rect = cardElement.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      
+      const rotateX = (y - centerY) / 20;
+      const rotateY = (centerX - x) / 20;
+      
+      cardElement.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+    });
+    
+    cardElement.addEventListener('mouseleave', () => {
+      cardElement.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+    });
+  });
+</script>
+

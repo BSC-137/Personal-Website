@@ -1,0 +1,101 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+// Get all blog posts
+const allPosts = await getCollection('blog');
+const posts = allPosts
+  .filter(post => !post.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<BaseLayout title="Blog - My Thoughts & Stories">
+  <div class="max-w-5xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-16 space-y-4">
+      <h1 class="text-6xl md:text-7xl font-bold glow-text">
+        📝 Blog
+      </h1>
+      <p class="text-xl text-gray-600 retro-text">
+        My thoughts, ideas, and digital ramblings
+      </p>
+    </div>
+
+    <!-- Blog posts grid -->
+    {posts.length === 0 ? (
+      <div class="glass-panel border border-white/40 rounded-3xl p-12 text-center">
+        <p class="text-2xl text-gray-700">
+          No posts yet! Check back soon for new content 🚀
+        </p>
+        <a href="/" class="glass-button inline-block mt-6">
+          ← Back Home
+        </a>
+      </div>
+    ) : (
+      <div class="grid gap-8">
+        {posts.map((post) => (
+          <a href={`/blog/${post.slug}`} class="block group">
+            <article class="glass-panel border border-white/40 rounded-3xl p-8 card-3d transition-all duration-500">
+              <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                <h2 class="text-3xl font-bold text-gray-800 group-hover:text-purple-600 transition-colors">
+                  {post.data.title}
+                </h2>
+                <time class="text-gray-500 text-sm whitespace-nowrap">
+                  {post.data.date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </time>
+              </div>
+              
+              <p class="text-gray-600 text-lg mb-4">
+                {post.data.description}
+              </p>
+
+              {post.data.tags && post.data.tags.length > 0 && (
+                <div class="flex flex-wrap gap-2">
+                  {post.data.tags.map((tag) => (
+                    <span class="bg-blue-100 text-blue-700 border border-blue-200 rounded-full px-4 py-1 text-sm">
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              <div class="mt-6 text-purple-600 group-hover:translate-x-2 transition-transform inline-flex items-center gap-2 font-medium">
+                Read more →
+              </div>
+            </article>
+          </a>
+        ))}
+      </div>
+    )}
+  </div>
+</BaseLayout>
+
+<script>
+  // Add 3D tilt effect on mouse move for blog cards
+  document.querySelectorAll('.card-3d').forEach((card) => {
+    const cardElement = card as HTMLElement;
+    
+    cardElement.addEventListener('mousemove', (e) => {
+      const rect = cardElement.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      
+      const rotateX = (y - centerY) / 20;
+      const rotateY = (centerX - x) / 20;
+      
+      cardElement.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+    });
+    
+    cardElement.addEventListener('mouseleave', () => {
+      cardElement.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+    });
+  });
+</script>
+
