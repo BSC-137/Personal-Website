@@ -1,8 +1,8 @@
-# ✨ Personal Website
+# Personal Website
 
 A modern, glassy, liquid personal website with old internet vibes built using Astro, Tailwind CSS, and MDX.
 
-## 🎨 Features
+## Features
 
 - **Glassmorphism Design** - Modern aero glass effects throughout
 - **Liquid Animations** - Smooth, organic motion and transitions
@@ -12,7 +12,7 @@ A modern, glassy, liquid personal website with old internet vibes built using As
 - **Fully Responsive** - Looks great on all devices
 - **Fast Performance** - Built with Astro for blazing speed
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -42,7 +42,7 @@ npm run build
 npm run preview  # Preview the built site
 ```
 
-## 📝 Adding Blog Posts
+## Adding Blog Posts
 
 Blog posts are located in `src/content/blog/` and use MDX format (Markdown with React components).
 
@@ -95,7 +95,7 @@ src/content/blog/
 └── another-post.mdx
 ```
 
-## 🎨 Customization
+## Customization
 
 ### Update Your Information
 
@@ -135,7 +135,7 @@ The site includes several custom animations:
 
 Add these classes to any element to apply the effects!
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 /
@@ -162,7 +162,7 @@ Add these classes to any element to apply the effects!
 └── package.json
 ```
 
-## 🌐 Deployment
+## Deployment
 
 ### Deploy to Vercel (Recommended)
 
@@ -183,31 +183,25 @@ Add these classes to any element to apply the effects!
 2. Run `npm run build`
 3. Deploy the `dist` folder to GitHub Pages
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - [Astro](https://astro.build) - Static Site Generator
 - [Tailwind CSS](https://tailwindcss.com) - Utility-first CSS
 - [MDX](https://mdxjs.com) - Markdown with components
 - TypeScript - Type safety
 
-## 💡 Tips
+## Tips
 
 - **Images:** Place images in `public/` folder and reference with `/image.jpg`
 - **SEO:** Update meta descriptions in page frontmatter
 - **Analytics:** Add your analytics code to `BaseLayout.astro`
 - **Custom Domain:** Configure through your hosting provider
 
-## 📚 Resources
+## Resources
 
 - [Astro Documentation](https://docs.astro.build)
 - [Tailwind CSS Docs](https://tailwindcss.com/docs)
 - [MDX Documentation](https://mdxjs.com/docs)
 
-## 🎉 Have Fun!
 
-This website is your canvas - make it yours! Experiment with colors, animations, and content. The web should be creative and fun! ✨
-
----
-
-Built with 💜 using Astro
 
